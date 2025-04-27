@@ -2,7 +2,7 @@
 # Server Configuration
 # =========================================
 server:
-  port: 8090 # <<<--- Porta para o cash-flow-service (exemplo)
+  port: 8090 # Porta deste serviço
 
 # =========================================
 # Spring Boot Application Configuration
@@ -10,18 +10,11 @@ server:
 spring:
   application:
     name: cash-flow-service
-
-  # =========================================
-  # Datasource Configuration (PostgreSQL) - Only for Manual Entries
-  # =========================================
   datasource:
-    url: jdbc:postgresql://localhost:5432/cashflowdb # <<<-- BD Dedicado (Recomendado)
+    url: jdbc:postgresql://localhost:5432/buildingDB # <<< BANCO CENTRALIZADO
     username: postgres
     password: postgres
-
-  # =========================================
-  # JPA & Hibernate Configuration
-  # =========================================
+    driver-class-name: org.postgresql.Driver
   jpa:
     hibernate:
       ddl-auto: update
@@ -29,38 +22,42 @@ spring:
     properties:
       hibernate:
         format_sql: true
+        dialect: org.hibernate.dialect.PostgreSQLDialect
 
 # =========================================
 # External Service URLs
 # =========================================
 auth:
   service:
-    url: ${AUTH_SERVICE_URL:http://localhost:8083/api} # <<<--- URL do Auth Service
+    url: ${AUTH_SERVICE_URL:http://localhost:8083/api} # URL do Authentication Service
 payable:
   service:
-    url: ${PAYABLE_SERVICE_URL:http://localhost:8088/api} # <<<--- URL do Payable Service (ajuste a porta 8088)
+    url: ${PAYABLE_SERVICE_URL:http://localhost:8088/api} # URL do Accounts Payable Service
 receivable:
   service:
-    url: ${RECEIVABLE_SERVICE_URL:http://localhost:8089/api} # <<<--- URL do Receivable Service (ajuste a porta 8089)
+    url: ${RECEIVABLE_SERVICE_URL:http://localhost:8089/api} # URL do Accounts Receivable Service
 
 # =========================================
-# JWT Configuration
+# JWT Configuration (Este serviço VALIDA)
 # =========================================
-jwt:
-  secret: ${JWT_SECRET_KEY:404E635266556A586E3272357538782F413F4428472B4B6250645367566B5970!} # <<<--- MESMA CHAVE SECRETA
+security:
+  jwt:
+    token:
+      secret-key: ${JWT_SECRET_KEY:404E635266556A586E3272357538782F413F4428472B4B6250645367566B5970!} # <<< CHAVE IDÊNTICA
 
 # =========================================
-# Logging & Swagger (Similar aos outros)
+# Logging Configuration
 # =========================================
 logging:
   level:
     org.springframework.web: INFO
     org.springframework.security: INFO
-    com.bufalari.cashflow: DEBUG # Seu pacote
+    com.bufalari.cashflow: DEBUG # Pacote raiz deste serviço
     org.hibernate.SQL: DEBUG
-    # Log Feign details
-    # com.bufalari.cashflow.client: DEBUG
 
+# =========================================
+# Swagger/OpenAPI Configuration
+# =========================================
 springdoc:
   api-docs:
     path: /v3/api-docs
@@ -69,3 +66,15 @@ springdoc:
     operations-sorter: method
   default-consumes-media-type: application/json
   default-produces-media-type: application/json
+
+# =========================================
+# Actuator Configuration
+# =========================================
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health, info, metrics
+  endpoint:
+    health:
+      show-details: when_authorized
