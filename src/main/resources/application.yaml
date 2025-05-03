@@ -1,8 +1,12 @@
 # =========================================
+# MS cash-flow-service
+# =========================================
+
+# =========================================
 # Server Configuration
 # =========================================
 server:
-  port: 8090 # Porta deste serviço
+  port: 8087 # Porta deste serviço
 
 # =========================================
 # Spring Boot Application Configuration
@@ -11,9 +15,9 @@ spring:
   application:
     name: cash-flow-service
   datasource:
-    url: jdbc:postgresql://localhost:5432/buildingDB # <<< BANCO CENTRALIZADO
-    username: postgres
-    password: postgres
+    url: ${DATASOURCE_URL} # <<< BANCO CENTRALIZADO
+    username: ${DATASOURCE_USERNAME_PROD}
+    password: ${DATASOURCE_PASSWORD_PROD}
     driver-class-name: org.postgresql.Driver
   jpa:
     hibernate:
@@ -29,13 +33,13 @@ spring:
 # =========================================
 auth:
   service:
-    url: ${AUTH_SERVICE_URL:http://localhost:8083/api} # URL do Authentication Service
+    url: ${AUTH_SERVICE_URL} # URL do Authentication Service
 payable:
   service:
-    url: ${PAYABLE_SERVICE_URL:http://localhost:8088/api} # URL do Accounts Payable Service
+    url: ${ACCOUNTS_PAYABLE} # URL do Accounts Payable Service
 receivable:
   service:
-    url: ${RECEIVABLE_SERVICE_URL:http://localhost:8089/api} # URL do Accounts Receivable Service
+    url: ${ACCOUNTS_RECEIVABLE} # URL do Accounts Receivable Service
 
 # =========================================
 # JWT Configuration (Este serviço VALIDA)
@@ -43,7 +47,7 @@ receivable:
 security:
   jwt:
     token:
-      secret-key: ${JWT_SECRET_KEY:404E635266556A586E3272357538782F413F4428472B4B6250645367566B5970!} # <<< CHAVE IDÊNTICA
+      secret-key: ${JWT_SECRET_KEY} # <<< CHAVE IDÊNTICA
 
 # =========================================
 # Logging Configuration
