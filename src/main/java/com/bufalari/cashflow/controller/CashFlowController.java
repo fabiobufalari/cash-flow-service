@@ -36,7 +36,7 @@ import java.util.UUID; // <<<--- IMPORT UUID
  * Controlador REST para gerenciamento de fluxo de caixa, incluindo lançamentos manuais e relatórios.
  */
 @RestController
-@RequestMapping("/api/cashflow")
+@RequestMapping("/cash-flow")
 @RequiredArgsConstructor
 @Tag(name = "Cash Flow Management", description = "Endpoints for manual cash entries and cash flow reporting / Endpoints para lançamentos manuais e relatórios de fluxo de caixa")
 @SecurityRequirement(name = "bearerAuth") // Assume global security via JWT
